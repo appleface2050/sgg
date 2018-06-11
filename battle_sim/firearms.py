@@ -27,6 +27,8 @@ class Firearms(Gear):
         return self.cartridge_capacity
 
 
+
+
 class Pistol(Firearms):
     """
     手枪

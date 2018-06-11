@@ -1,6 +1,7 @@
 # coding=utf-8
 from battle_sim.cloth import cloth_mk002
 from battle_sim.firearms import glock17
+from battle_sim.long_gun import long_gun_none
 from util.baseclass import Gear
 
 
@@ -70,7 +71,7 @@ class DrillInfantryOutfit001(InfantryOutfit):
     """
     def __init__(self):
         self.cloth = cloth_mk002
-        self.long_gun = None #当前只能装备一个
+        self.long_gun = long_gun_none #当前只能装备一个
         self.short_gun = glock17 #当前只能装备一个
         self.grenade = []
 
