@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # soldier = InfantrySoldier(drill_outfit001)
     home = BattleTeam([InfantrySoldier(drill_outfit001)])
     away = BattleTeam([InfantrySoldier(drill_outfit001)])
-    battle = BattleGround(home, away)
+    battle = BattleGround(home, away, "", "")
     battle.team_describe()
 
 
