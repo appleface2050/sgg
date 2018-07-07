@@ -39,7 +39,21 @@ class BattleField(object):
             print "start round: ", self.round, datetime.datetime.now()
             for player in self.action_queue:
                 move = player.make_move()
+                print move
+                action_type = move.get("action_type")
+                target = move.get("target")
+                weapon = move.get("weapon")
 
+                if action_type == "SEARCHING":
+                    pass
+                elif action_type == "APPROACHING":
+                    pass
+                elif action_type == "ATTACKING":
+                    pass
+                elif action_type == "RETREAT":
+                    pass
+
+                player.do_update()
             if self.round >= 10:
                 break
 
