@@ -20,6 +20,17 @@ class Battle(JSONBaseModel):
     away_casualties = models.CharField(max_length=8192, unique=False, null=False, blank=False)
     uptime = models.DateTimeField(auto_now=True, verbose_name=u'数据更新时间')
 
+    @classmethod
+    def add_data(cls, start_date, home, away, winner, home_casualties, away_casualties):
+        a = cls()
+        a.start_date = start_date
+        a.home = home
+        a.away = away
+        a.winner = winner
+        a.home_casualties = home_casualties
+        a.away_casualties = away_casualties
+        a.save()
+
 class BattleProcess(JSONBaseModel):
     """
     战斗进程
@@ -32,3 +43,14 @@ class BattleProcess(JSONBaseModel):
     move = models.CharField(max_length=64, unique=False, null=False, blank=False)
     result = models.CharField(max_length=64, unique=False, null=False, blank=False)
     uptime = models.DateTimeField(auto_now=True, verbose_name=u'数据更新时间')
+
+    @classmethod
+    def add_data(cls, battle_id, belong, unit, target, move, result):
+        a = cls()
+        a.battle_id = battle_id
+        a.belong = belong
+        a.unit = unit
+        a.target = target
+        a.move = move
+        a.result = result
+        a.save()
