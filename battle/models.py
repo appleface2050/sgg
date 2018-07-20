@@ -15,14 +15,25 @@ class Battle(JSONBaseModel):
     start_date = models.DateField(null=False, verbose_name=u'日期', db_index=True)
     home = models.CharField(max_length=254, unique=False, null=False, blank=False, db_index=True)
     away = models.CharField(max_length=254, unique=False, null=False, blank=False, db_index=True)
-    winner = models.CharField(max_length=254, unique=False, null=False, blank=False, db_index=True)
-    home_casualties = models.CharField(max_length=8192, unique=False, null=False, blank=False)
-    away_casualties = models.CharField(max_length=8192, unique=False, null=False, blank=False)
+    winner = models.CharField(max_length=254, unique=False, null=True, blank=True, db_index=True)
+    home_casualties = models.CharField(max_length=8192, unique=False, null=True, blank=True)
+    away_casualties = models.CharField(max_length=8192, unique=False, null=True, blank=True)
     uptime = models.DateTimeField(auto_now=True, verbose_name=u'数据更新时间')
 
     @classmethod
-    def add_data(cls, start_date, home, away, winner, home_casualties, away_casualties):
+    def init(cls, start_date, home, away):
         a = cls()
+        a.start_date = start_date
+        a.home = home
+        a.away = away
+        a.save()
+
+        return a.pk
+
+    @classmethod
+    def add_data(cls, battle_id, start_date, home, away, winner, home_casualties, away_casualties):
+        # a = cls.objects.filter(start_date=start_date,home=home,away=away).order_by("-uptime")[0]
+        a = cls.objects.get(pk=battle_id)
         a.start_date = start_date
         a.home = home
         a.away = away
@@ -45,12 +56,14 @@ class BattleProcess(JSONBaseModel):
     uptime = models.DateTimeField(auto_now=True, verbose_name=u'数据更新时间')
 
     @classmethod
-    def add_data(cls, battle_id, belong, unit, target, move, result):
+    def add_data(cls, battle_id,round, belong, unit, target, move, result):
         a = cls()
         a.battle_id = battle_id
+        a.round = round
         a.belong = belong
         a.unit = unit
         a.target = target
         a.move = move
         a.result = result
         a.save()
+

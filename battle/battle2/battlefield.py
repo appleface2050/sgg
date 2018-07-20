@@ -2,10 +2,25 @@
 
 import datetime
 import random
+import os
+import sys
+import json
 
 from battle.battle2.squad import Squad
 from battle.battle2.unit import Unit
+
 from battle_calculate import hit, shuffle
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
+
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sg.settings")
+
+application = get_wsgi_application()
+
+from battle.models import Battle, BattleProcess
 
 
 class BattleField(object):
@@ -123,11 +138,27 @@ class BattleField(object):
             lost_count = count - remain
             away_casualties[unit_class.__name__] = lost_count
 
-        result = {"total_round": total_round, "winer": winer, "home_casualties": home_casualties,
+        result = {"total_round": total_round, "winner": winer, "home_casualties": home_casualties,
                   "away_casualties": away_casualties}
         return result
 
+    def battle_process_log(self, battle_id, round, belong, unit, target, move, result):
+        BattleProcess.add_data(battle_id, round, belong, unit, target, move, result)
+
+    def battle_result_log(self, battle_id, battle_result):
+        start_date = datetime.date.today()
+        home = self.home_squad.squad_name
+        away = self.away_squad.squad_name
+        winner = battle_result.get("winner")
+        home_casualties = json.dumps(battle_result.get("home_casualties"))
+        away_casualties = json.dumps(battle_result.get("away_casualties"))
+        Battle.add_data(battle_id, start_date, home, away, winner, home_casualties, away_casualties)
+
+    def init_battle_log(self, start_date, home, away):
+        return Battle.init(start_date, home, away)
+
     def start_fight(self):
+        battle_id = self.init_battle_log(datetime.date.today(), self.home_squad.squad_name, self.away_squad.squad_name)
         while True:
             if self.check_battle_finish():
                 break
@@ -145,9 +176,17 @@ class BattleField(object):
                     hit = self.get_attack_result(unit, target)
                     print "hit:", hit
                     self.unit_move_end(unit, target, move, hit)
-                    if self.check_battle_finish():
-                        break
-        print self.battle_result()
+                    if hit:
+                        result = "hit"
+                    else:
+                        result = "miss"
+                self.battle_process_log(battle_id, self.round, belong, unit, target, move, result)
+                if self.check_battle_finish():
+                    break
+
+        battle_result = self.battle_result()
+        print battle_result
+        self.battle_result_log(battle_id, battle_result)
 
 
 if __name__ == '__main__':
