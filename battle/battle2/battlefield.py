@@ -190,6 +190,7 @@ class BattleField(object):
 
 
 if __name__ == '__main__':
+    print "qq"
     home_squad = Squad("home_squad", [{"Unit": Unit, "count": 10}])
     away_squad = Squad("away_squad", [{"Unit": Unit, "count": 10}])
     a = BattleField(home_squad, away_squad)
