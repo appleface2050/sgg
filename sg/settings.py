@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'battle_sim',
+    'battle',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -132,6 +133,3 @@ STATICFILES_DIRS = [
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'battle_sim/templates'),
 )
-
-# ALIYUN_ACCESS_ID = "t8z6fuZ2B1FldqmL"
-# ALIYUN_ACCESS_SECRET_KEY = "ES2YRYWBREeBNeGCBczpc63FCLJvc9"
